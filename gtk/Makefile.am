@@ -9,6 +9,11 @@ INCLUDES = \
 	$(PYGOBJECT_CFLAGS) \
 	-I$(srcdir)/gtk
 
+if USE_QUARTZ
+# same as in gtk+/gdk/quartz/Makefile.am
+INCLUDES += "-xobjective-c"
+endif
+
 # defs files
 defsdir = $(pkgdatadir)/$(PLATFORM_VERSION)/defs
 defs_DATA =

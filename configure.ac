@@ -445,6 +445,11 @@ case $gdk_target in
         ;;
 esac
 
+if test "x$gdktarget" = "xquartz"; then
+  AM_CONDITIONAL(USE_QUARTZ, true)
+else
+  AM_CONDITIONAL(USE_QUARTZ, false)
+fi
 
 dnl checks to see if numpy is installed.
 AC_ARG_ENABLE(numpy,
