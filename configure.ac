@@ -445,7 +445,7 @@ case $gdk_target in
         ;;
 esac
 
-if test "x$gdktarget" = "xquartz"; then
+if test "x$gdk_target" = "xquartz"; then
   AM_CONDITIONAL(USE_QUARTZ, true)
 else
   AM_CONDITIONAL(USE_QUARTZ, false)
