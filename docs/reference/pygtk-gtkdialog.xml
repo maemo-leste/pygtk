@@ -834,7 +834,7 @@ dialog.destroy()
       <variablelist>
         <varlistentry>
           <term><emphasis>Returns</emphasis>&nbsp;:</term>
-          <listitem><simpara>the content area <link linkend="class-gdkscreen"><classname>gtk.VBox</classname></link>.</simpara></listitem>
+          <listitem><simpara>the content area <link linkend="class-gtkvbox"><classname>gtk.VBox</classname></link>.</simpara></listitem>
         </varlistentry>
       </variablelist>
 
