@@ -12,6 +12,13 @@
 
   <maintainer>
     <foaf:Person>
+      <foaf:name>John Stowers</foaf:name>
+      <foaf:mbox rdf:resource="mailto:john.stowers@gmail.com" />
+      <gnome:userid>jstowers</gnome:userid>
+    </foaf:Person>
+  </maintainer>
+  <maintainer>
+    <foaf:Person>
       <foaf:name>Gustavo J Carneiro</foaf:name>
       <foaf:mbox rdf:resource="mailto:gjc@gnome.org" />
       <gnome:userid>gjc</gnome:userid>
