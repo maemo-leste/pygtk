@@ -15,6 +15,7 @@ sizegroup to the labels.
 import pygtk
 pygtk.require('2.0')
 import gtk
+import hildon
 
 def create_label(text):
     hbox = gtk.HBox(spacing=6)
@@ -25,7 +26,7 @@ def create_label(text):
     return hbox, label
 
 def main():
-    win = gtk.Window()
+    win = hildon.Window()
     win.connect('delete-event', gtk.main_quit)
     win.set_border_width(6)
     win.set_title('GtkSizeGroup example')

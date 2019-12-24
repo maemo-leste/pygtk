@@ -6,12 +6,15 @@ useful in applications. The purpose of the "demo" is just to provide a
 handy place to browse the available stock icons and stock items.
 '''
 # pygtk version: Maik Hertha <maik.hertha@berlin.de>
+# hildon version: Lauro Moura <lauromoura@gmail.com>
+# hildon version: Merlijn Wajer <merlijn@wizzup.org>
 
 import pygtk
 pygtk.require('2.0')
 import gobject
 import gtk
 import re
+import hildon
 
 def id_to_macro(stock_id):
     if stock_id == '':
@@ -87,28 +90,28 @@ def label_set_func(tree_column, cell, model, iter):
     cell.set_property("text", info.stock_item[1])
 
 
-class StockItemAndIconBrowserDemo(gtk.Window):
+class StockItemAndIconBrowserDemo(hildon.Window):
     def __init__(self, parent=None):
-        gtk.Window.__init__(self)
+        hildon.Window.__init__(self)
         try:
             self.set_screen(parent.get_screen())
         except AttributeError:
             self.connect('destroy', lambda *w: gtk.main_quit())
 
         self.set_title(self.__class__.__name__)
-        self.set_default_size(-1, 500)
-        self.set_border_width(8)
 
         hbox = gtk.HBox(False, 8)
+
         self.add(hbox)
 
         sw = gtk.ScrolledWindow()
         sw.set_shadow_type(gtk.SHADOW_ETCHED_IN)
-        sw.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
-        hbox.pack_start(sw, False, False, 0)
+        sw.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+        hbox.pack_start(sw, True, True, 0)
 
         model = self.__create_model()
         treeview = gtk.TreeView(model)
+        treeview.set_headers_visible(True)
         sw.add(treeview)
 
         column = gtk.TreeViewColumn()

@@ -16,6 +16,8 @@ import gobject
 import gtk
 import pango
 
+import hildon
+
 # use for simple syntax highlighting ;-)
 import tokenize
 import keyword
@@ -80,22 +82,29 @@ class InputStream(object):
         return line
 
 
-class PyGtkDemo(gtk.Window):
+class PyGtkDemo(hildon.Window):
     info_buffer = None
     source_buffer = None
     module_cache  = {}
 
     def __init__(self):
-        gtk.Window.__init__(self)
+        hildon.Window.__init__(self)
+
+        self.app = hildon.Program()
+        self.app.add_window(self)
         self.set_title("PyGTK Code Demos")
         self.connect('destroy', lambda w: gtk.main_quit())
-        self.set_default_size(800, 400)
+        #self.set_default_size(800, 400)
 
         hbox = gtk.HBox(False, 3)
         self.add(hbox)
 
         treeview = self.__create_treeview()
-        hbox.pack_start(treeview, False, False)
+        scroll = gtk.ScrolledWindow()
+        scroll.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+        scroll.add(treeview)
+
+        hbox.pack_start(scroll, False, False)
 
         self.notebook = gtk.Notebook()
         hbox.pack_start(self.notebook, expand=True)
@@ -116,6 +125,9 @@ class PyGtkDemo(gtk.Window):
         tag = self.source_buffer.create_tag('string', foreground='#7F007F')
         tag = self.source_buffer.create_tag('comment', foreground='#007F00',
             style=pango.STYLE_ITALIC)
+
+        self.path = None
+        self.connect("key-press-event", self.key_press_cb, treeview)
 
         self.show_all()
 
@@ -190,10 +202,45 @@ class PyGtkDemo(gtk.Window):
         text_view.set_editable(False)
         text_view.set_cursor_visible(False)
 
-        text_view.set_wrap_mode(not is_source)
+        if is_source:
+            text_view.set_wrap_mode(gtk.WRAP_NONE)
+        else:
+            text_view.set_wrap_mode(gtk.WRAP_WORD)
+
 
         return scrolled_window, buffer
 
+    def key_press_cb(self, window, event, treeview):
+    
+        if event.keyval != gtk.keysyms.Return:
+            return
+    
+        if self.path == None:
+            return
+    
+        path = self.path
+    
+        model = treeview.get_model()
+        iter  = model.get_iter(path)
+        module_name  = model.get_value(iter, MODULE_COLUMN)
+        func_name    = model.get_value(iter, FUNC_COLUMN)
+        italic_value = model.get_value(iter, ITALIC_COLUMN)
+        try:
+            self.module_cache[module_name].present()
+        except KeyError:
+            module = getattr(demos, module_name)
+            model.set(iter, ITALIC_COLUMN, not italic_value)
+            cmd = 'demos.%s.%s' % (module_name, func_name)
+            #print cmd
+            window = eval(cmd)(self)
+            if window:
+                window.connect('destroy', self.window_closed_cb, model, path)
+                self.module_cache[module_name] = window
+
+            if hildon.Window in window.__class__.__bases__:
+                self.app.add_window(window)
+
+#    def row_activated_cb(self, treeview, path, column):
     def row_activated_cb(self, treeview, path, column):
         model = treeview.get_model()
         iter  = model.get_iter(path)
@@ -213,9 +260,11 @@ class PyGtkDemo(gtk.Window):
             if window:
                 window.connect('destroy', self.window_closed_cb, model, path)
                 self.module_cache[module_name] = window
+#        pass
 
     def selection_changed_cb(self, selection):
         model, iter = selection.get_selected()
+        self.path = model.get_path(iter)
         if not iter:
             return False
 
@@ -231,10 +280,13 @@ class PyGtkDemo(gtk.Window):
         if italic_value:
             model.set(iter, ITALIC_COLUMN, not italic_value)
 
+        if hildon.Window in window.__class__.__bases__:
+            self.app.remove_window(window)
+
 
     def read_module(self, module):
         filename = module.__file__
-        if filename[-4:] == '.pyc':
+        if filename[-4:] == '.pyo':
             filename = filename[:-1]
         fd = open(filename)
         return fd.read()

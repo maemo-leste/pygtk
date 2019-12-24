@@ -12,6 +12,8 @@ import gobject
 import gtk
 from gtk import gdk
 
+import hildon
+
 class Child:
     widget = None
     x = 0
@@ -260,7 +262,7 @@ class Layout(gtk.Container):
 Layout.set_set_scroll_adjustments_signal('set-scroll-adjustments')
 
 def main():
-    window = gtk.Window()
+    window = hildon.Window()
     window.set_size_request(300, 300)
     window.connect('delete-event', gtk.main_quit)
 

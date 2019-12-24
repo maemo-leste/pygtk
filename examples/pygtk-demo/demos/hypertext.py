@@ -6,19 +6,22 @@ bold or colored or underlined. But tags are not restricted to appearance.
 They can also affect the behavior of mouse and key presses, as this demo
 shows.'''
 # pygtk version: Maik Hertha <maik.hertha@berlin.de>
+# hildon version: Lauro Moura <lauromoura@gmail.com>
+# hildon version: Merlijn Wajer <merlijn@wizzup.org>
 
 import pygtk
 pygtk.require('2.0')
 import gtk
 import pango
+import hildon
 
-class HypertextDemo(gtk.Window):
+class HypertextDemo(hildon.Window):
     hovering_over_link = False
     hand_cursor = gtk.gdk.Cursor(gtk.gdk.HAND2)
     regular_cursor = gtk.gdk.Cursor(gtk.gdk.XTERM)
 
     def __init__(self, parent=None):
-        gtk.Window.__init__(self)
+        hildon.Window.__init__(self)
         try:
             self.set_screen(parent.get_screen())
         except AttributeError:

@@ -6,11 +6,14 @@ later on by a GtkTreeView to display it. This demo builds a simple
 GtkTreeStore and displays it. If you're new to the GtkTreeView widgets
 and associates, look into the GtkListStore example first.'''
 # pygtk version: Maik Hertha <maik.hertha@berlin.de>
+# hildon version: Lauro Moura <lauromoura@gmail.com>
+# hildon version: Merlijn Wajer <merlijn@wizzup.org>
 
 import pygtk
 pygtk.require('2.0')
 import gobject
 import gtk
+import hildon
 
 #   columns
 (
@@ -131,9 +134,9 @@ toplevel = \
   ["December", False, False, False, False, False, False, december]
 ]
 
-class TreeStoreDemo(gtk.Window):
+class TreeStoreDemo(hildon.Window):
     def __init__(self, parent=None):
-        gtk.Window.__init__(self)
+        hildon.Window.__init__(self)
         try:
             self.set_screen(parent.get_screen())
         except AttributeError:
@@ -158,6 +161,8 @@ class TreeStoreDemo(gtk.Window):
 
         # create treeview
         treeview = gtk.TreeView(model)
+        treeview.set_headers_visible(True)
+        treeview.set_property("allow-checkbox-mode", False)
         treeview.set_rules_hint(True)
 
         self.__add_columns(treeview)

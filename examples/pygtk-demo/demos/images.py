@@ -9,6 +9,8 @@ If you want to put image data in your program as a C variable, use the
 make-inline-pixbuf program that comes with GTK+. This way you won't need to
 depend on loading external files, your application binary can be self-contained.'''
 # pygtk version: Maik Hertha <maik.hertha@berlin.de>
+# hildon version: Lauro Moura <lauromoura@gmail.com>
+# hildon version: Merlijn Wajer <merlijn@wizzup.org>
 
 import os
 
@@ -16,6 +18,7 @@ import pygtk
 pygtk.require('2.0')
 import gobject
 import gtk
+import hildon
 
 IMAGEDIR = os.path.join(os.path.dirname(__file__), 'images')
 ALPHA_IMAGE = os.path.join(IMAGEDIR, 'alphatest.png')
@@ -42,13 +45,13 @@ def progressive_updated_callback(loader, x, y, width, height, image):
     '''
     image.queue_draw()
 
-class ImagesDemo(gtk.Window):
+class ImagesDemo(hildon.Window):
     pixbuf_loader = None
     load_timeout = None
     image_stream = None
 
     def __init__(self, parent=None):
-        gtk.Window.__init__(self)
+        hildon.Window.__init__(self)
         try:
             self.set_screen(parent.get_screen())
         except AttributeError:
@@ -57,9 +60,15 @@ class ImagesDemo(gtk.Window):
         self.set_title(self.__class__.__name__)
         self.set_border_width(8)
 
+        scroll = gtk.ScrolledWindow()
+        scroll.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+        self.add(scroll)
+
         vbox = gtk.VBox(False, 8)
         vbox.set_border_width(8)
-        self.add(vbox)
+
+        scroll.add_with_viewport(vbox)
+
 
         label = gtk.Label();
         label.set_markup("<u>Image loaded from a file</u>")
@@ -157,7 +166,7 @@ class ImagesDemo(gtk.Window):
 
     def cleanup_callback(self, win):
         if self.load_timeout != 0:
-            gtk.timeout_remove(self.load_timeout)
+            gobject.source_remove(self.load_timeout)
             self.load_timeout = 0
 
         if self.pixbuf_loader is not None:

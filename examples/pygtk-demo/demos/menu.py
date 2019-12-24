@@ -8,6 +8,7 @@ gtk 2.0.'''
 import pygtk
 pygtk.require('2.0')
 import gtk
+import hildon
 
 def create_menu(depth, length=5):
     if depth < 1:
@@ -17,19 +18,20 @@ def create_menu(depth, length=5):
     group= None
 
     for i in range(length):
-        menuitem = gtk.RadioMenuItem(group, 'item %2d - %d' % (depth, i))
-        group = menuitem
-        menu.add(menuitem)
-        menuitem.show()
+        menuitem = gtk.RadioMenuItem(group, '%d-%d' % (depth, i))
         if depth > 1:
             submenu = create_menu(depth - 1)
             menuitem.set_submenu(submenu)
+        group = menuitem
+        menu.append(menuitem)
+        menuitem.show()
+
     return menu
 
-class MenuDemo(gtk.Window):
+class MenuDemo(hildon.Window):
     def __init__(self, parent=None):
         # Create the toplevel window
-        gtk.Window.__init__(self)
+        hildon.Window.__init__(self)
         try:
             self.set_screen(parent.get_screen())
         except AttributeError:
@@ -40,30 +42,31 @@ class MenuDemo(gtk.Window):
         vbox = gtk.VBox()
         self.add(vbox)
 
-        menubar = gtk.MenuBar()
-        vbox.pack_start(menubar, expand=False)
+        menu = gtk.Menu()
 
         menuitem = gtk.MenuItem('test\nline2')
-        menuitem.set_submenu(create_menu(2, 50))
-        menubar.add(menuitem)
+        menuitem.set_submenu(create_menu(4, 50))
+        menu.append(menuitem)
 
         menuitem = gtk.MenuItem('foo')
-        menuitem.set_submenu(create_menu(2))
-        menubar.add(menuitem)
+        menuitem.set_submenu(create_menu(4))
+        menu.add(menuitem)
 
         menuitem = gtk.MenuItem('bar')
-        menuitem.set_submenu(create_menu(2))
+        menuitem.set_submenu(create_menu(4))
         menuitem.set_right_justified(True)
-        menubar.add(menuitem)
+        menu.add(menuitem)
+
+        self.set_menu(menu)
 
         vbox2 = gtk.VBox(spacing=10)
         vbox2.set_border_width(10)
         vbox.pack_start(vbox2)
 
         combo_box = gtk.combo_box_new_text()
-        combo_box.set_wrap_width(2)
+        #combo_box.set_wrap_width(2)
         for i in range(50):
-            combo_box.append_text('item - %d' % i)
+            combo_box.append_text('%d' % i)
         combo_box.set_active(0)
         vbox2.pack_start(combo_box)
 

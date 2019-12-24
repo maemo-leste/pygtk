@@ -4,6 +4,7 @@ import pygtk
 pygtk.require('2.0')
 import gobject
 import gtk
+import hildon
 
 from dndpixmap import drag_icon_xpm, trashcan_open_xpm, trashcan_closed_xpm
 
@@ -142,7 +143,7 @@ def main():
     global trashcan_open
     global trashcan_closed
     global drag_icon
-    win = gtk.Window()
+    win = hildon.Window()
     win.realize()
     win.connect('destroy', lambda w: gtk.main_quit())
     table = gtk.Table(2,2)

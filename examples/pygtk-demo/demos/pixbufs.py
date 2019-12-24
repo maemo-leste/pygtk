@@ -8,6 +8,8 @@ Extreme Pixbuf Hacker Federico Mena Quintero. It also shows off how to use
 GtkDrawingArea to do a simple animation.
 Look at the Image demo for additional pixbuf usage examples.'''
 # pygtk version: Maik Hertha <maik.hertha@berlin.de>
+# hildon version: Lauro Moura <lauromoura@gmail.com>
+# hildon version: Merlijn Wajer <merlijn@wizzup.org>
 
 import os
 import math
@@ -16,6 +18,7 @@ import pygtk
 pygtk.require('2.0')
 import gobject
 import gtk
+import hildon
 
 FRAME_DELAY = 50
 CYCLE_LEN = 60
@@ -33,7 +36,7 @@ image_names = [
     "gnu-keys.png"
 ]
 
-class PixbufsDemo(gtk.Window):
+class PixbufsDemo(hildon.Window):
     frame  = None      # frame of the background image
     background = None  # background-pixbuf
     images     = []    # list of pixbufs
@@ -44,7 +47,7 @@ class PixbufsDemo(gtk.Window):
     timeout_id = None
 
     def __init__(self, parent=None):
-        gtk.Window.__init__(self)
+        hildon.Window.__init__(self)
         try:
             self.set_screen(parent.get_screen())
         except AttributeError:
@@ -63,7 +66,7 @@ class PixbufsDemo(gtk.Window):
             dialog.show()
 
         else:
-            self.set_size_request(self.back_width, self.back_height)
+            #self.set_size_request(self.back_width, self.back_height)
 
             self.frame = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, False, 8,
                 self.back_width, self.back_height)

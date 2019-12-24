@@ -10,6 +10,7 @@ import pygtk
 pygtk.require('2.0')
 import gobject
 import gtk
+import hildon
 
 (
     COLUMN_FIXED,
@@ -35,10 +36,10 @@ data = \
  (False, 6112,  'Enhancement', 'netscape-like collapsable toolbars'),
  (False, 1,     'Normal', 'First bug :=)'))
 
-class ListStoreDemo(gtk.Window):
+class ListStoreDemo(hildon.Window):
     def __init__(self, parent=None):
         # create window, etc
-        gtk.Window.__init__(self)
+        hildon.Window.__init__(self)
         try:
             self.set_screen(parent.get_screen())
         except AttributeError:
@@ -57,7 +58,7 @@ class ListStoreDemo(gtk.Window):
 
         sw = gtk.ScrolledWindow()
         sw.set_shadow_type(gtk.SHADOW_ETCHED_IN)
-        sw.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
+        sw.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
         vbox.pack_start(sw)
 
         # create tree model
@@ -67,6 +68,8 @@ class ListStoreDemo(gtk.Window):
         treeview = gtk.TreeView(model)
         treeview.set_rules_hint(True)
         treeview.set_search_column(COLUMN_DESCRIPTION)
+        treeview.set_headers_visible(True)
+        treeview.set_property("allow-checkbox-mode", False)
 
         sw.add(treeview)
 
@@ -112,8 +115,8 @@ class ListStoreDemo(gtk.Window):
         column = gtk.TreeViewColumn('Fixed', renderer, active=COLUMN_FIXED)
 
         # set this column to a fixed sizing(of 50 pixels)
-        column.set_sizing(gtk.TREE_VIEW_COLUMN_FIXED)
-        column.set_fixed_width(50)
+        #column.set_sizing(gtk.TREE_VIEW_COLUMN_FIXED)
+        #column.set_fixed_width(500)
 
         treeview.append_column(column)
 

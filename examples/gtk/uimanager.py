@@ -3,11 +3,15 @@
 #
 # Johan Dahlin <johan@gnome.org>, 2004
 #
+# Port to Hildon:
+#
+# Lauro Moura <lauromoura@gmail.com>, 2007
 
 import pygtk
 pygtk.require('2.0')
 
 import gtk
+import hildon
 
 ui_string = """<ui>
   <menubar name='Menubar'>
@@ -30,9 +34,9 @@ ui_string = """<ui>
   </toolbar>
 </ui>"""
 
-class Window(gtk.Window):
+class Window(hildon.Window):
     def __init__(self):
-        gtk.Window.__init__(self)
+        hildon.Window.__init__(self)
         self.set_position(gtk.WIN_POS_CENTER)
         self.set_title('GtkUIManager test app')
         self.connect('delete-event', self.delete_event_cb)
@@ -41,8 +45,23 @@ class Window(gtk.Window):
         self.add(vbox)
 
         self.create_ui()
-        vbox.pack_start(self.ui.get_widget('/Menubar'), expand=False)
-        vbox.pack_start(self.ui.get_widget('/Toolbar'), expand=False)
+
+        # We don't need this inside hildon.
+        #vbox.pack_start(self.ui.get_widget('/Menubar'), expand=False)
+        #vbox.pack_start(self.ui.get_widget('/Toolbar'), expand=False)
+
+        #Setting up menus from UIManager menubar to hildon menu.
+        menu = gtk.Menu()
+        menubar = self.ui.get_widget("/Menubar")
+
+        for i in menubar.get_children():
+            i.reparent(menu)
+
+        self.set_menu(menu)
+
+        #Setting up toolbar
+        toolbar = self.ui.get_widget("/Toolbar")
+        self.add_toolbar(toolbar)
 
         sw = gtk.ScrolledWindow()
         sw.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
@@ -52,8 +71,9 @@ class Window(gtk.Window):
         self.buffer = textview.get_buffer()
         sw.add(textview)
 
-        status = gtk.Statusbar()
-        vbox.pack_end(status, expand=False)
+        #No status bar
+        #status = gtk.Statusbar()
+        #vbox.pack_end(status, expand=False)
 
     def create_ui(self):
         ag = gtk.ActionGroup('WindowActions')
@@ -83,10 +103,8 @@ class Window(gtk.Window):
         gtk.main()
 
     def file_open_cb(self, action):
-        dialog = gtk.FileChooserDialog("Open..", self,
-                                       gtk.FILE_CHOOSER_ACTION_OPEN,
-                                       (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,
-                                        gtk.STOCK_OPEN, gtk.RESPONSE_OK))
+        dialog = hildon.FileChooserDialog(self,
+                                       gtk.FILE_CHOOSER_ACTION_OPEN)
         dialog.set_default_response(gtk.RESPONSE_OK)
 
         filter = gtk.FileFilter()

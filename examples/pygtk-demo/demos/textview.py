@@ -5,6 +5,8 @@ The GtkTextView widget displays a GtkTextBuffer. One GtkTextBuffer can be displa
 by multiple GtkTextViews. This demo has two views displaying a single buffer, and
 shows off the widget's text formatting features."""
 # pygtk version: Maik Hertha <maik.hertha@berlin.de>
+# hildon version: Lauro Moura <lauromoura@gmail.com>
+# hildon version: Merlijn Wajer <merlijn@wizzup.org>
 
 import os
 import sys
@@ -13,6 +15,7 @@ import pygtk
 pygtk.require('2.0')
 import gobject
 import gtk
+import hildon
 
 gray50_width  = 2
 gray50_height = 2
@@ -22,10 +25,10 @@ GTKLOGO_IMAGE = os.path.join(os.path.dirname(__file__),
 FLOPPYBUDDY_IMAGE = os.path.join(os.path.dirname(__file__),
                                  'images', 'floppybuddy.gif')
 
-class TextViewDemo(gtk.Window):
+class TextViewDemo(hildon.Window):
     def __init__(self, parent=None):
         # Create the toplevel window
-        gtk.Window.__init__(self)
+        hildon.Window.__init__(self)
         try:
             self.set_screen(parent.get_screen())
         except AttributeError:
@@ -152,12 +155,12 @@ class TextViewDemo(gtk.Window):
                     underline=pango.UNDERLINE_DOUBLE)
 
         text_buffer.create_tag("superscript",
-                    rise=10 * pango.SCALE,      # 10 pixels
-                    size=8 * pango.SCALE)       #  8 points
+                    rise=10 * pango.SCALE,  # 10 pixels
+                    size=8 * pango.SCALE)   #  8 points
 
         text_buffer.create_tag("subscript",
-                    rise=-10 * pango.SCALE,     # 10 pixels
-                    size=8 * pango.SCALE)       #  8 points
+                    rise=-10 * pango.SCALE, # 10 pixels
+                    size=8 * pango.SCALE)   #  8 points
 
         text_buffer.create_tag("rtl_quote",
                     wrap_mode=gtk.WRAP_WORD, direction=gtk.TEXT_DIR_RTL,
@@ -340,7 +343,7 @@ class TextViewDemo(gtk.Window):
             "German(Deutsch S\303\274d) Gr\303\274\303\237 Gott\nGreek"
             "(\316\225\316\273\316\273\316\267\316\275\316\271\316\272"
             "\316\254) \316\223\316\265\316\271\316\254 \317\203\316\261"
-            "\317\202\nHebrew   \327\251\327\234\327\225\327\235\n"
+            "\317\202\nHebrew	\327\251\327\234\327\225\327\235\n"
             "Japanese(\346\227\245\346\234\254\350\252\236)\n\nThe "
             "widget properly handles bidirectional text, word wrapping, "
             "DOS/UNIX/Unicode paragraph separators, grapheme boundaries, "
@@ -463,13 +466,12 @@ class TextViewDemo(gtk.Window):
 
         self.recursive_attach_view(0, view, anchor)
 
-        self.win = gtk.Window()
+        self.win = hildon.Window()
         sw = gtk.ScrolledWindow()
         sw.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
 
         self.win.add(sw)
         sw.add(view)
-        self.win.set_default_size(300, 400)
         self.win.show_all()
         return
 

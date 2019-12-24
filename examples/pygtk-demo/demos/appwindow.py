@@ -3,6 +3,8 @@
 
 Demonstrates a typical application window, with menubar, toolbar, statusbar.'''
 # pygtk version: Maik Hertha <maik.hertha@berlin.de>
+# hildon version: Lauro Moura <lauromoura@gmail.com>
+# hildon version: Merlijn Wajer <merlijn@wizzup.org>
 
 import pygtk
 pygtk.require('2.0')
@@ -90,12 +92,12 @@ def register_stock_icons():
     except gobject.GError, error:
         print 'failed to load GTK logo for toolbar'
 
-class ApplicationMainWindowDemo(gtk.Window):
+class ApplicationMainWindowDemo(hildon.Window):
     def __init__(self, parent=None):
         register_stock_icons()
 
         # Create the toplevel window
-        gtk.Window.__init__(self)
+        hildon.Window.__init__(self)
         try:
             self.set_screen(parent.get_screen())
         except AttributeError:
@@ -114,25 +116,21 @@ class ApplicationMainWindowDemo(gtk.Window):
         except gobject.GError, msg:
             print "building menus failed: %s" % msg
         bar = merge.get_widget("/MenuBar")
-        bar.show()
+        menu = gtk.Menu()
+
+        for i in bar.get_children():
+            i.reparent(menu)
+
+        self.set_menu(menu)
+        #bar.show()
 
         table = gtk.Table(1, 4, False)
         self.add(table)
 
-        table.attach(bar,
-            # X direction #          # Y direction
-            0, 1,                      0, 1,
-            gtk.EXPAND | gtk.FILL,     0,
-            0,                         0);
-
         bar = merge.get_widget("/ToolBar")
         bar.set_tooltips(True)
         bar.show()
-        table.attach(bar,
-            # X direction #       # Y direction
-            0, 1,                   1, 2,
-            gtk.EXPAND | gtk.FILL,  0,
-            0,                      0)
+        self.add_toolbar(bar)
 
         # Create document
         sw = gtk.ScrolledWindow()
@@ -141,7 +139,7 @@ class ApplicationMainWindowDemo(gtk.Window):
 
         table.attach(sw,
             # X direction           Y direction
-            0, 1,                   2, 3,
+            0, 1,                   0, 1,
             gtk.EXPAND | gtk.FILL,  gtk.EXPAND | gtk.FILL,
             0,                      0)
 
@@ -154,7 +152,7 @@ class ApplicationMainWindowDemo(gtk.Window):
         self.statusbar = gtk.Statusbar()
         table.attach(self.statusbar,
             # X direction           Y direction
-            0, 1,                   3, 4,
+            0, 1,                   1, 2,
             gtk.EXPAND | gtk.FILL,  0,
             0,                      0)
 

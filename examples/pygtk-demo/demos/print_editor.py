@@ -174,14 +174,14 @@ def begin_print(operation, context, print_data):
     page_height = 0
 
     for line in xrange(num_lines):
-      layout_line = print_data.layout.get_line(line)
-      ink_rect, logical_rect = layout_line.get_extents()
-      lx, ly, lwidth, lheight = logical_rect
-      line_height = lheight / 1024.0
-      if page_height + line_height > height:
-	  page_breaks.append(line)
-	  page_height = 0
-      page_height += line_height
+        layout_line = print_data.layout.get_line(line)
+        ink_rect, logical_rect = layout_line.get_extents()
+        lx, ly, lwidth, lheight = logical_rect
+        line_height = lheight / 1024.0
+        if page_height + line_height > height:
+            page_breaks.append(line)
+            page_height = 0
+        page_height += line_height
 
     operation.set_n_pages(len(page_breaks) + 1)
     print_data.page_breaks = page_breaks
@@ -198,11 +198,11 @@ def draw_page(operation, context, page_nr, print_data):
         end = print_data.page_breaks[page_nr]
     except IndexError:
         end = print_data.layout.get_line_count()
-    
+
     cr = context.get_cairo_context()
 
     cr.set_source_rgb(0, 0, 0)
-  
+
     i = 0
     start_pos = 0
     iter = print_data.layout.get_iter()
@@ -245,7 +245,7 @@ def do_print(action):
 
     if page_setup is not None:
         print_.set_default_page_setup(page_setup)
-  
+
     print_.connect("begin_print", begin_print, print_data)
     print_.connect("draw_page", draw_page, print_data)
 
@@ -266,7 +266,7 @@ def do_print(action):
     if not print_.is_finished():
         active_prints.remove(print_)
         update_statusbar()
-      
+
         print_.connect("status_changed", status_changed_cb)
 
 
@@ -293,11 +293,11 @@ entries = [
   ( "New", gtk.STOCK_NEW,                      # name, stock id
     "_New", "<control>N",                      # label, accelerator
     "Create a new file",                       # tooltip
-    do_new ),      
+    do_new ),
   ( "Open", gtk.STOCK_OPEN,                    # name, stock id
     "_Open","<control>O",                      # label, accelerator
     "Open a file",                             # tooltip
-    do_open ), 
+    do_open ),
   ( "Save", gtk.STOCK_SAVE,                    # name, stock id
     "_Save","<control>S",                      # label, accelerator
     "Save current file",                       # tooltip
@@ -369,7 +369,7 @@ def create_window():
         main_window.connect("delete-event", gtk.main_quit)
     actions = gtk.ActionGroup("Actions")
     actions.add_actions(entries)
-  
+
     ui = gtk.UIManager()
     ui.insert_action_group(actions, 0)
     main_window.add_accel_group(ui.get_accel_group())
@@ -393,42 +393,42 @@ def create_window():
     sw.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
     sw.set_shadow_type(gtk.SHADOW_IN)
     table.attach(sw,
-		 # /* X direction */       /* Y direction */
+                #/* X direction */       /* Y direction */
                  0, 1,                   1, 2,
                  gtk.EXPAND | gtk.FILL,  gtk.EXPAND | gtk.FILL,
                  0,                      0)
-  
+
     contents = gtk.TextView()
     contents.grab_focus()
     sw.add(contents)
 
     ## Create statusbar
-  
+
     statusbar = gtk.Statusbar()
     table.attach(statusbar,
-		 #/* X direction */       /* Y direction */
+                #/* X direction */       /* Y direction */
                  0, 1,                   2, 3,
                  gtk.EXPAND | gtk.FILL,  0,
                  0,                      0);
-    
+
     ## Show text widget info in the statusbar */
     buffer = contents.get_buffer()
-  
+
     buffer.connect_object("changed",
-			  buffer_changed_callback,
+                          buffer_changed_callback,
                           None)
-  
+
     buffer.connect_object("mark_set", # cursor moved
                           mark_set_callback,
                           None)
-  
-    main_window.connect_object("window_state_event", 
+
+    main_window.connect_object("window_state_event",
                                update_resize_grip,
                                statusbar,
                                0)
-  
+
     update_ui()
-  
+
     main_window.show_all()
 
 
@@ -441,7 +441,7 @@ def main(argv):
         pass
     else:
         load_file(fname)
-  
+
     gtk.main()
 
 def PrintEditorDemo(win):

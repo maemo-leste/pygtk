@@ -1,19 +1,21 @@
 #!/usr/bin/env python
 """Color Selector
 
-GtkColorSelection lets the user choose a color. GtkColorSelectionDialog is a
-prebuilt dialog containing a GtkColorSelection."""
+HildonColorSelector lets the user choose a color from a standard 16-color
+pallete or a pallete of 8 user-customizable colors, wich can be modified
+through HildonColorPopup."""
 
 import pygtk
 pygtk.require('2.0')
 import gtk
+import hildon
 
-class ColorSelectorDemo(gtk.Window):
+class ColorSelectorDemo(hildon.Window):
     color = gtk.gdk.color_parse("blue")
 
     def __init__(self, parent=None):
         # Create the toplevel window
-        gtk.Window.__init__(self)
+        hildon.Window.__init__(self)
         try:
             self.set_screen(parent.get_screen())
         except AttributeError:
@@ -50,18 +52,14 @@ class ColorSelectorDemo(gtk.Window):
 
     def on_change_color_clicked(self, button):
 
-        dialog = gtk.ColorSelectionDialog("Changing color")
+        dialog = hildon.ColorSelector(self)
         dialog.set_transient_for(self)
-        colorsel = dialog.colorsel
-
-        colorsel.set_previous_color(self.color)
-        colorsel.set_current_color(self.color)
-        colorsel.set_has_palette(True)
+        dialog.set_color(self.color)
 
         response = dialog.run()
 
         if response == gtk.RESPONSE_OK:
-            self.color = colorsel.get_current_color()
+            self.color = dialog.get_color()
             self.d_area.modify_bg(gtk.STATE_NORMAL, self.color)
 
         dialog.destroy()

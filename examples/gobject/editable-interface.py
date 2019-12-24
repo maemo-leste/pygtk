@@ -2,7 +2,7 @@ import pygtk
 pygtk.require('2.0')
 import gtk
 import gobject
-
+import hildon
 
 class EditableLabel(gtk.Entry, gtk.Editable):
 
@@ -17,7 +17,9 @@ class EditableLabel(gtk.Entry, gtk.Editable):
 gobject.type_register(EditableLabel)
 
 if __name__ == '__main__':
-    w = gtk.Window()
+    app = hildon.Program()
+    w = hildon.Window()
+    app.add_window(w)
     vbox = gtk.VBox()
     w.add(vbox)
     label = EditableLabel("Foo Bar Zbr")

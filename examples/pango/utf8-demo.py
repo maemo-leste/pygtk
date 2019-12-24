@@ -5,6 +5,7 @@
 import pygtk
 pygtk.require('2.0')
 import gtk
+import hildon
 
 # string taken from pango examples directory and converted from utf8
 # to python unicode string escapes
@@ -64,9 +65,9 @@ Difference among chinese characters in GB, JIS, KSC, BIG5:
  BIG5	--	元氣	開發
 '''
 
-win = gtk.Window()
+win = hildon.Window()
 win.connect('destroy', gtk.main_quit)
-win.set_default_size(600, 400)
+#win.set_default_size(600, 400)
 
 swin = gtk.ScrolledWindow()
 swin.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)

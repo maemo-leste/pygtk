@@ -5,6 +5,7 @@
 import pygtk
 pygtk.require('2.0')
 import gtk
+import hildon
 
 pixmap = None
 
@@ -45,7 +46,7 @@ def motion_notify_event(widget, event):
     return True
 
 def main():
-    win = gtk.Window()
+    win = hildon.Window()
     win.set_name("Test Input")
     win.connect("destroy", lambda w: gtk.main_quit())
     win.set_border_width(5)
