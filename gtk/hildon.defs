@@ -1,0 +1,46 @@
+;; -*- scheme -*-
+
+(include "hildon-types.defs")
+
+;; From gtkentry.h
+
+(define-method get_placeholder_text
+  (of-object "GtkEntry")
+  (c-name "hildon_gtk_entry_get_placeholder_text")
+  (return-type "const-gchar*")
+)
+
+(define-method set_placeholder_text
+  (of-object "GtkEntry")
+  (c-name "hildon_gtk_entry_set_placeholder_text")
+  (return-type "none")
+  (parameters
+    '("const-gchar*" "placeholder_text")
+  )
+)
+
+(define-method set_input_mode
+  (of-object "GtkEntry")
+  (c-name "hildon_gtk_entry_set_input_mode")
+  (return-type "none")
+  (parameters
+    '("HildonGtkInputMode" "input_mode")
+  )
+)
+
+(define-method get_input_default
+  (of-object "GtkEntry")
+  (c-name "hildon_gtk_entry_get_input_default")
+  (return-type "HildonGtkInputMode")
+)
+
+(define-method set_input_default
+  (of-object "GtkEntry")
+  (c-name "hildon_gtk_entry_set_input_default")
+  (return-type "none")
+  (parameters
+    '("HildonGtkInputMode" "input_mode")
+  )
+)
+
+

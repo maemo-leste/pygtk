@@ -144,6 +144,10 @@ GTK_DEFS += gtk-2.24.defs
 GTK_TYPES_DEFS += gtk-2.24-types.defs
 endif
 
+# hildon defs
+GTK_DEFS += hildon.defs
+GTK_TYPES_DEFS += hildon-types.defs
+
 CREATEDEFS = $(PYTHON) $(CODEGENDIR)/createdefs.py
 
 GDK_OVERRIDES = \

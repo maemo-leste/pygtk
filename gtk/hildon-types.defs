@@ -1,0 +1,67 @@
+;; -*- scheme -*-
+;; Enumerations and flags ...
+
+;; Hildon Enumerations and flags ...
+
+(define-enum Mode
+  (in-module "Hildon")
+  (c-name "HildonMode")
+  (gtype-id "HILDON_TYPE_MODE")
+  (values
+    '("diablo" "HILDON_DIABLO")
+    '("fremantle" "HILDON_FREMANTLE")
+  )
+)
+
+(define-enum UIMode
+  (in-module "Hildon")
+  (c-name "HildonUIMode")
+  (gtype-id "HILDON_TYPE_UI_MODE")
+  (values
+    '("normal" "HILDON_UI_MODE_NORMAL")
+    '("edit" "HILDON_UI_MODE_EDIT")
+  )
+)
+
+(define-flags SizeType
+  (in-module "Hildon")
+  (c-name "HildonSizeType")
+  (gtype-id "HILDON_TYPE_SIZE_TYPE")
+  (values
+    '("auto-width" "HILDON_SIZE_AUTO_WIDTH")
+    '("halfscreen-width" "HILDON_SIZE_HALFSCREEN_WIDTH")
+    '("fullscreen-width" "HILDON_SIZE_FULLSCREEN_WIDTH")
+    '("auto-height" "HILDON_SIZE_AUTO_HEIGHT")
+    '("finger-height" "HILDON_SIZE_FINGER_HEIGHT")
+    '("thumb-height" "HILDON_SIZE_THUMB_HEIGHT")
+    '("auto" "HILDON_SIZE_AUTO")
+  )
+)
+
+(define-enum InvalidInputType
+  (in-module "Gtk")
+  (c-name "GtkInvalidInputType")
+  (gtype-id "GTK_TYPE_INVALID_INPUT_TYPE")
+  (values
+    '("max-chars-reached" "GTK_INVALID_INPUT_MAX_CHARS_REACHED")
+    '("mode-restriction" "GTK_INVALID_INPUT_MODE_RESTRICTION")
+  )
+)
+
+(define-flags InputMode
+  (in-module "Gtk")
+  (c-name "HildonGtkInputMode")
+  (gtype-id "GTK_TYPE_GTK_INPUT_MODE")
+  (values
+    '("alpha" "HILDON_GTK_INPUT_MODE_ALPHA")
+    '("numeric" "HILDON_GTK_INPUT_MODE_NUMERIC")
+    '("special" "HILDON_GTK_INPUT_MODE_SPECIAL")
+    '("hexa" "HILDON_GTK_INPUT_MODE_HEXA")
+    '("mode-tele" "HILDON_GTK_INPUT_MODE_TELE")
+    '("mode-full" "HILDON_GTK_INPUT_MODE_FULL")
+    '("multiline" "HILDON_GTK_INPUT_MODE_MULTILINE")
+    '("invisible" "HILDON_GTK_INPUT_MODE_INVISIBLE")
+    '("autocap" "HILDON_GTK_INPUT_MODE_AUTOCAP")
+    '("dictionary" "HILDON_GTK_INPUT_MODE_DICTIONARY")
+  )
+)
