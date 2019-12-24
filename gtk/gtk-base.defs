@@ -6111,6 +6111,31 @@
   (return-type "none")
 )
 
+; INDT: maemo extensions...
+
+(define-function tap_and_hold_menu_position_top
+  (c-name "gtk_widget_tap_and_hold_menu_position_top")
+  (return-type "none")
+  (parameters
+    '("gint*" "x")
+    '("gint*" "y")
+    '("gboolean*" "push_in")
+    '("GtkWidget*" "widget")
+  )
+)
+
+(define-method tap_and_hold_setup
+  (of-object "GtkWidget")
+  (c-name "gtk_widget_tap_and_hold_setup")
+  (return-type "none")
+  (parameters
+    '("GtkWidget*" "menu")
+    '("GtkCallback" "func")
+    '("GtkWidgetTapAndHoldFlags" "flags")
+  )
+)
+; /INDT: maemo extensions...
+
 (define-function target_list_add_text_targets
   (c-name "gtk_target_list_add_text_targets")
   (return-type "none")

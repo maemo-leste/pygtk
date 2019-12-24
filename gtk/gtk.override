@@ -8853,3 +8853,190 @@ _wrap_gtk_clipboard_wait_for_uris(PyGObject *self)
     Py_INCREF(Py_None);
     return Py_None;
 }
+%%
+override gtk_widget_tap_and_hold_setup kwargs
+
+static GHashTable *tap_pairs = NULL;
+
+static void
+pygtk_tap_menu_position(GtkMenu *menu, int *x, int *y, gboolean *push_in,
+                        gpointer user_data)
+{
+    PyGILState_STATE state;
+    GtkWidget *widget;
+    PyGtkCustomNotify *cunote;
+    PyObject *ret;
+
+    widget = GTK_WIDGET(user_data);
+    cunote = (PyGtkCustomNotify *)g_hash_table_lookup(tap_pairs, widget);
+
+    g_assert(cunote->func);
+
+    state = pyg_gil_state_ensure();
+
+    /* Copied from pygtk_menu_position */
+    if (cunote->data) {
+        ret = PyObject_CallFunction(cunote->func, "(NNO)",
+                                    pygobject_new((GObject *)menu),
+                                    pygobject_new((GObject *)widget),
+                                    cunote->data);
+    } else {
+        ret = PyObject_CallFunction(cunote->func, "(NN)",
+                                    pygobject_new((GObject *)menu),
+                                    pygobject_new((GObject *)widget));
+    }
+
+    if (ret == NULL || !PyArg_ParseTuple(ret, "iii", x, y, push_in)) {
+        PyErr_Print();
+        Py_XDECREF(ret);
+    } else {
+        Py_DECREF(ret);
+    } /* End of copy */
+
+    pyg_gil_state_release(state);
+}
+
+/* pygtk_tap_source_destroy
+ * Called when an object serving as key to tap hashtable is finalized
+ *
+ * Steals the reference to the CustoNotify and removes it manually.
+ */
+static gboolean
+pygtk_tap_source_destroy(gpointer data, GObject *old_source)
+{
+    PyGILState_STATE state;
+    PyGtkCustomNotify *cunote;
+
+    cunote = (PyGtkCustomNotify *)data;
+
+    state = pyg_gil_state_ensure();
+
+    if (tap_pairs != NULL) {
+        g_hash_table_steal(tap_pairs, old_source);
+        pygtk_custom_destroy_notify(cunote);
+    }
+
+    pyg_gil_state_release(state);
+
+    return FALSE;
+}
+
+/* pygtk_tap_source_remove_ref
+ * Called when removing an entry from tap hashtable manually
+ */
+static void
+pygtk_tap_source_remove_ref(gpointer data)
+{
+    GObject *obj;
+    gpointer *cunote = NULL;
+    PyGILState_STATE state;
+
+    state = pyg_gil_state_ensure();
+
+    obj = (GObject *)data;
+
+    if (tap_pairs != NULL)
+        cunote = g_hash_table_lookup(tap_pairs, obj);
+
+    g_object_weak_unref(obj, pygtk_tap_source_destroy, cunote);
+
+    pyg_gil_state_release(state);
+}
+
+static PyObject *
+_wrap_gtk_widget_tap_and_hold_setup(PyGObject *self, PyObject *args, PyObject *kwargs)
+{
+    static char *kwlist[] = {"menu", "callback", "data", NULL};
+    PyGObject *py_menu = Py_None;
+    PyObject *func = Py_None;
+    PyObject *data = NULL;
+    GtkWidget *menu = NULL;
+    PyGtkCustomNotify *cunote;
+
+    if (!PyArg_ParseTupleAndKeywords(args, kwargs,
+                                     "|OOO:gtk.Widget.tap_and_hold_setup",
+                                     kwlist, &py_menu, &func, &data))
+        return NULL;
+
+    if (pygobject_check(py_menu, &PyGtkMenu_Type)) {
+           menu = GTK_WIDGET(py_menu->obj);
+    } else if (py_menu != Py_None) {
+        PyErr_SetString(PyExc_TypeError,
+                        "menu must be a gtk.Menu or None");
+        return NULL;
+    }
+
+    if (func != Py_None && !PyCallable_Check(func)) {
+        PyErr_SetString(PyExc_TypeError,
+                        "func must be a callable or None");
+        return NULL;
+    }
+
+    if (func != Py_None) {
+        cunote = g_new0(PyGtkCustomNotify, 1);
+        cunote->func = func;
+        cunote->data = data;
+        Py_INCREF(func);
+        Py_XINCREF(data);
+
+        /* Create the hashtable for func/data pairs. */
+        if (tap_pairs == NULL)
+            tap_pairs = g_hash_table_new_full(NULL, NULL, pygtk_tap_source_remove_ref,
+                                              pygtk_custom_destroy_notify);
+
+        /* Store the cunote */
+        g_object_weak_ref(self->obj, pygtk_tap_source_destroy, cunote);
+        g_hash_table_replace(tap_pairs, self->obj, cunote);
+        /* When deleting this widget, remove from the hash_table */
+
+        gtk_widget_tap_and_hold_setup(GTK_WIDGET(self->obj), menu,
+                                      pygtk_tap_menu_position, 0);
+    } else {
+        gtk_widget_tap_and_hold_setup(GTK_WIDGET(self->obj), menu, NULL, 0);
+    }
+
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
+%%
+override gtk_widget_tap_and_hold_menu_position_top kwargs
+static PyObject *
+_wrap_gtk_widget_tap_and_hold_menu_position_top(PyObject *self, PyObject *args, PyObject *kwargs)
+{
+    static char *kwlist[] = {"menu", "widget", "data", NULL};
+    PyGObject *pymenu;
+    PyGObject *pywidget;
+    PyObject *data = NULL;
+    PyObject *pytuple;
+    PyObject *pyx;
+    PyObject *pyy;
+    PyObject *pypush_in;
+
+    int x, y;
+    gboolean push_in = FALSE;
+
+    if (!PyArg_ParseTupleAndKeywords(args, kwargs,
+                                     "O!O!|O:gtk.Widget.tap_and_hold_menu_position_top",
+                                     kwlist,
+                                     &PyGtkMenu_Type, &pymenu,
+                                     &PyGtkWidget_Type, &pywidget,
+                                     &data))
+        return NULL;
+
+    gtk_widget_tap_and_hold_menu_position_top(GTK_WIDGET(pymenu->obj),
+                                              &x, & y, &push_in,
+                                              GTK_WIDGET(pywidget->obj));
+
+    pyx = PyInt_FromLong(x);
+    pyy = PyInt_FromLong(y);
+    pypush_in = PyBool_FromLong(push_in);
+
+    pytuple = PyTuple_New(3);
+
+    PyTuple_SetItem(pytuple, 0, pyx);
+    PyTuple_SetItem(pytuple, 1, pyy);
+    PyTuple_SetItem(pytuple, 2, pypush_in);
+
+    return pytuple;
+}
