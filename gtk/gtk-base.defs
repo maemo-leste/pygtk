@@ -24447,6 +24447,44 @@
 )
 
 
+;; Maemo changes for gtktreeview.h
+
+(define-method get_action_area_box
+  (of-object "GtkTreeView")
+  (c-name "hildon_tree_view_get_action_area_box")
+  (return-type "GtkWidget*")
+)
+
+(define-method set_action_area_visible
+  (of-object "GtkTreeView")
+  (c-name "hildon_tree_view_set_action_area_visible")
+  (parameters
+    '("gboolean" "visible")
+  )
+)
+
+(define-method get_action_area_visible
+  (of-object "GtkTreeView")
+  (c-name "hildon_tree_view_get_action_area_visible")
+  (return-type "gboolean")
+)
+
+
+(define-method set_action_area_orientation
+  (of-object "GtkTreeView")
+  (c-name "hildon_tree_view_set_action_area_orientation")
+  (parameters
+    '("GtkOrientation" "orientation")
+  )
+)
+
+(define-method get_action_area_orientation
+  (of-object "GtkTreeView")
+  (c-name "hildon_tree_view_get_action_area_orientation")
+  (return-type "GtkOrientation")
+)
+
+
 ;; From /opt/gtk2/include/gtk-2.0/gtk/gtktreeviewcolumn.h
 
 (define-function gtk_tree_view_column_get_type
