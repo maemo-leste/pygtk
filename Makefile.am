@@ -4,7 +4,7 @@ if BUILD_GTK
   GTK_SUBDIR = gtk
 endif
 
-SUBDIRS = . $(GTK_SUBDIR) examples tests docs
+SUBDIRS = . $(GTK_SUBDIR) examples tests
 
 PLATFORM_VERSION = 2.0
 
