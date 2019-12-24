@@ -66,7 +66,8 @@ def _init():
 
 keysyms = LazyModule('keysyms', locals())
 
-_init()
+if not hasattr(sys.modules['__main__'], 'python_launcher_enabled'):
+    _init()
 
 # CAPI
 _PyGtk_API = _gtk._PyGtk_API
