@@ -1,0 +1,4 @@
+01_pygtk-demo.patch
+03_testsuite_filechooser.patch
+04_Fix_leaks_of_Pango_objects.patch
+05_Fix_GdkColor_pixel_parse.patch

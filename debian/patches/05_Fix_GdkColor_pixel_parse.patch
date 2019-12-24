@@ -1,0 +1,31 @@
+Description: Fix bus error on sparc64
+ Since GdkColor.pixel is a guint32, but "k" in the format string means unsigned
+ long, a temporary local needs to be used to get the right alignment and size
+ on platforms where unsigned long is not 32-bit.
+Author: James Clarke <jrtc27@jrtc27.com>
+Bug-Debian: https://bugs.debian.org/839867
+---
+This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
+Index: pygtk-2.24.0/gtk/gdkcolor.override
+===================================================================
+--- pygtk-2.24.0.orig/gtk/gdkcolor.override
++++ pygtk-2.24.0/gtk/gdkcolor.override
+@@ -33,6 +33,7 @@ _wrap_gdk_color_new(PyGBoxed *self,
+     static char *kwlist1[] = {"red", "green", "blue", "pixel", NULL };
+     static char *kwlist2[] = { "spec", NULL };
+     PyObject *red = Py_None, *green = Py_None, *blue = Py_None;
++    unsigned long pixel;
+     const char *spec = NULL;
+     GdkColor colour;
+ 
+@@ -56,7 +57,9 @@ _wrap_gdk_color_new(PyGBoxed *self,
+     PyErr_Clear();
+ 
+     if (PyArg_ParseTupleAndKeywords(args, kwargs, "|OOOk:gdk.Color", kwlist1,
+-                                    &red, &green, &blue, &colour.pixel)) {
++                                    &red, &green, &blue, &pixel)) {
++        colour.pixel = pixel;
++
+         /* We don't allow mixing floats and non-floats as that is too
+          * error-prone.  All non-floats are deemed integers in case
+          * they have __int__() method. */
