@@ -6779,6 +6779,20 @@ _wrap_gtk_dialog_set_alternative_button_order(PyGObject *self, PyObject *args,
     Py_INCREF(Py_None);
     return Py_None;
 }
+
+
+%%
+override gtk_dialog_get_padding noargs
+static PyObject *
+_wrap_gtk_dialog_get_padding(PyGObject *self)
+{
+    guint top, bottom, left, right;
+
+    gtk_dialog_get_padding(GTK_DIALOG(self->obj), &top, &bottom, &left, &right);
+    
+    return Py_BuildValue("(iiii)", top, bottom, left, right);
+}
+
 %%
 override gtk_icon_info_free noargs
 static PyObject *
