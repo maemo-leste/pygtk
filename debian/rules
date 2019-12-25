@@ -165,7 +165,7 @@ clean::
 
 maybe_check = $(if $(findstring nocheck,$(DEB_BUILD_OPTIONS)),,check)
 
-binary-indep: build install $(maybe_check)
+binary-indep: build install
 	dh_testdir
 	dh_testroot
 	dh_installdocs -i
