@@ -1,4 +1,4 @@
-pygtk (2.24.1-6.1) unstable; urgency=medium
+pygtk (2.24.1-1) unstable; urgency=medium
 
   * Initial port to Maemo Leste with hildon patches
 
