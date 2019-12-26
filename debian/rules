@@ -183,7 +183,7 @@ binary-indep: build install
 	dh_md5sums -i
 	dh_builddeb -i
 
-binary-arch: build install $(maybe_check)
+binary-arch: build install
 	dh_testdir
 	dh_testroot
 	dh_installdocs -s
