@@ -1,3 +1,9 @@
+pygtk (2.24.1-2) unstable; urgency=medium
+
+  * Maemo Leste Chimaera import
+
+ -- Merlijn Wajer <merlijn@wizzup.org>  Fri, 25 Nov 2022 11:13:12 +0100
+
 pygtk (2.24.1-1) unstable; urgency=medium
 
   * Initial port to Maemo Leste with hildon patches
