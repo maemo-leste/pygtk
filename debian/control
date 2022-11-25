@@ -81,7 +81,7 @@ Depends: ${python:Depends},
          python-gtk2 (<< ${source:Version}.1~),
          libglib2.0-dev (>= 2.8),
          libgtk2.0-dev (>= 2.18.0),
-         python-dev,
+         python2-dev,
          python-gobject-2-dev (>= 2.21.3)
 Recommends: python-gtk2-doc
 Description: GTK+ bindings: devel files
